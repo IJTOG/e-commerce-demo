@@ -1,3 +1,5 @@
+const withImages = require("next-images");
+
 if (typeof require !== "undefined") {
   require.extensions[".less"] = file => {};
 }
@@ -18,4 +20,4 @@ const withLess = require("@zeit/next-less"),
     webpack: config => config
   };
 
-module.exports = withLess(nextConfig);
+module.exports = withImages(withLess(nextConfig));
