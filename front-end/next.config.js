@@ -7,8 +7,7 @@ if (typeof require !== "undefined") {
 const withLess = require("@zeit/next-less"),
   nextConfig = {
     env: {
-      weatherApi: "",
-      mapBoxApi: ""
+      url_api: "localhost:3001"
     },
     onDemandEntries: {
       maxInactiveAge: 1000 * 60 * 60,

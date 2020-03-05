@@ -1,14 +1,18 @@
 import "../assets/styles.less";
 import App from "next/app";
-
 import Head from "next/head";
 import NProgress from "nprogress";
 import Page from "../components/Page";
 import Router from "next/router";
+import { PersistGate } from "redux-persist/integration/react";
+import { configureStore } from "../store";
+import { Provider } from "react-redux";
 
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
+
+const { store, persistor } = configureStore();
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx, req }) {
@@ -30,6 +34,7 @@ class MyApp extends App {
     pageProps.ieBrowser = ie;
     return { pageProps };
   }
+
   render() {
     const { Component, pageProps } = this.props;
     return (
@@ -48,9 +53,13 @@ class MyApp extends App {
             rel="stylesheet"
           />
         </Head>
-        <Page>
-          <Component {...pageProps} />
-        </Page>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <Page>
+              <Component {...pageProps} />
+            </Page>
+          </PersistGate>
+        </Provider>
       </div>
     );
   }
