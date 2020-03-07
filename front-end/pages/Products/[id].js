@@ -1,30 +1,26 @@
 import { Card, Row, Col } from "antd";
 import { compose } from "redux";
 import { lifecycle, withHandlers, withState } from "recompose";
-import { getProducts } from "../../lib/api";
+import { getProduct } from "../../lib/api";
 import { withRouter } from "next/router";
+import ProductForm from "../../components/Product/ProductForm";
 
-const Product = ({ router }) => (
-  <Card title="Product" bordered={false} style={{ top: 20 }}>
-    <Row justify="end">
-      <Col>TEST</Col>
-    </Row>
+const Product = ({ product }) => (
+  <Card title="Edit Product" bordered={false} style={{ top: 20 }}>
+    <ProductForm product={product} />
   </Card>
 );
 
 export default compose(
   withRouter,
-  withState("data", "setData", null),
+  withState("product", "setProduct", null),
   withHandlers({
-    getProducts
+    getProduct
   }),
   lifecycle({
     async componentDidMount() {
-      let _product = await getProducts();
-      _product.entities.map(item => {
-        item.key = item.id;
-      });
-      await this.props.setData(_product.entities);
+      let _product = await getProduct(this.props.query.id);
+      await this.props.setProduct(_product);
     }
   })
 )(Product);

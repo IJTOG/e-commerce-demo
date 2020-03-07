@@ -49,6 +49,49 @@ const getProducts = async () => {
   }
 };
 
+const getProduct = async _id => {
+  try {
+    let response = await axios.get(`http://localhost:3001/api/products/` + _id);
+    return response.data;
+  } catch (err) {
+    return Promise.reject(err);
+  }
+};
+
+const updateProduct = async form => {
+  try {
+    let response = await axios.patch(
+      `http://localhost:3001/api/products/update`,
+      form
+    );
+    return response.data;
+  } catch (err) {
+    return Promise.reject(err);
+  }
+};
+
+const deleteProduct = async _id => {
+  try {
+    let response = await axios.delete(
+      `http://localhost:3001/api/products/delete/` + _id
+    );
+    return response.data;
+  } catch (err) {
+    return Promise.reject(err);
+  }
+};
+
+const uploadImage = async image => {
+  try {
+    const form = new FormData();
+    form.append("file", image);
+    let response = await axios.post(`http://localhost:3001/api/files`, form);
+    return response.data;
+  } catch (err) {
+    return Promise.reject(err);
+  }
+};
+
 // const getChangeticketByReleaseCycle = async Body => {
 //   try {
 //     let response = await axios.post(
@@ -63,4 +106,12 @@ const getProducts = async () => {
 //   }
 // };
 
-export { signin, verifyToken, getProducts };
+export {
+  signin,
+  verifyToken,
+  getProducts,
+  getProduct,
+  deleteProduct,
+  uploadImage,
+  updateProduct
+};

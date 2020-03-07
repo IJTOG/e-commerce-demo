@@ -23,6 +23,21 @@ export class ProductService {
     }
   };
 
+  getProduct = async _id => {
+    try {
+      const _product = await this.productsRepository.findOne<Product>({
+        where: {
+          id: _id
+        },
+        order: [["createdAt", "DESC"]]
+      });
+      const result = { entities: _product.dataValues };
+      return result;
+    } catch {
+      throw new HttpException("Product not found.", HttpStatus.BAD_REQUEST);
+    }
+  };
+
   createProduct = async product => {
     try {
       await this.productsRepository.create<Product>(product);
@@ -32,10 +47,20 @@ export class ProductService {
     }
   };
 
+  updateProduct = async product => {
+    try {
+      console.log(product);
+      // await this.productsRepository.create<Product>(product);
+      return true;
+    } catch {
+      throw new HttpException("Not authorized.", HttpStatus.EXPECTATION_FAILED);
+    }
+  };
+
   deleteProduct = async _id => {
     try {
       await this.productsRepository.destroy({
-        where: { id: 2 }
+        where: { id: _id }
       });
       return true;
     } catch {

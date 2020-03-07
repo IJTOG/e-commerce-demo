@@ -2,29 +2,38 @@ import {
   Controller,
   Get,
   Post,
-  Request,
   Body,
   Delete,
-  Param
+  Param,
+  Patch
 } from "@nestjs/common";
 import { ProductService } from "./product.service";
-import { AuthGuard } from "@nestjs/passport";
 
 @Controller()
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get("products")
-  async findProducts(@Request() req) {
+  async findProducts() {
     return this.productService.getProducts();
   }
 
-  @Post("product/create")
+  @Get("products/:id")
+  async findProduct(@Param() params) {
+    return this.productService.getProduct(params.id);
+  }
+
+  @Post("products/create")
   async createProduct(@Body() product) {
     return this.productService.createProduct(product);
   }
 
-  @Delete("product/delete/:id")
+  @Patch("products/update")
+  async updateProduct(@Body() product) {
+    return this.productService.updateProduct(product);
+  }
+
+  @Delete("products/delete/:id")
   async deleteProduct(@Param() params) {
     return this.productService.deleteProduct(params.id);
   }
