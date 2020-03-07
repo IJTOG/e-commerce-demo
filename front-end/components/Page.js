@@ -14,7 +14,14 @@ const { Header, Content, Footer, Sider } = Layout;
 
 const NonDashboardRoutes = ["/signin"];
 
-const Page = ({ router, children, user, loggedIn, logoutEvent }) => {
+const Page = ({
+  router,
+  children,
+  user,
+  loggedIn,
+  logoutEvent,
+  routeActive
+}) => {
   const isNotDashboard = NonDashboardRoutes.includes(router.pathname);
 
   const menu = (
@@ -35,12 +42,7 @@ const Page = ({ router, children, user, loggedIn, logoutEvent }) => {
           }}
         >
           <div className="logo" />
-          <Menu
-            defaultSelectedKeys={[
-              routes.find(item => item.path === router.route).name
-            ]}
-            mode="inline"
-          >
+          <Menu defaultSelectedKeys={[routeActive]} mode="inline">
             <a href="/">
               <img
                 src={require("../static/logo-2.png")}
@@ -91,6 +93,7 @@ const Page = ({ router, children, user, loggedIn, logoutEvent }) => {
 
 export default compose(
   withRouter,
+  withState("routeActive", "setRouteActive", ""),
   withState("loggedIn", "setLoggedIn", false),
   connect(
     ({ user }) => ({ user }),
@@ -101,6 +104,7 @@ export default compose(
     })
   ),
   withHandlers({
+    routes,
     verifyToken,
     logoutEvent: ({ deleteToken }) => e => {
       deleteToken();
@@ -108,6 +112,11 @@ export default compose(
   }),
   lifecycle({
     async componentDidMount() {
+      try {
+        await this.props.setRouteActive(
+          routes.find(item => item.path === this.props.router.route).name
+        );
+      } catch {}
       try {
         await verifyToken();
         await this.props.setLoggedIn(true);

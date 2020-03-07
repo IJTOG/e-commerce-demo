@@ -40,18 +40,27 @@ const verifyToken = async () => {
   }
 };
 
-const getChangeticketByReleaseCycle = async Body => {
+const getProducts = async () => {
   try {
-    let response = await axios.post(
-      `${constants.API}/snow/changeticket/releasecycle`,
-      {
-        ...Body
-      }
-    );
-    return response;
+    let response = await axios.get(`http://localhost:3001/api/products`);
+    return response.data;
   } catch (err) {
     return Promise.reject(err);
   }
 };
 
-export { signin, verifyToken };
+// const getChangeticketByReleaseCycle = async Body => {
+//   try {
+//     let response = await axios.post(
+//       `${constants.API}/snow/changeticket/releasecycle`,
+//       {
+//         ...Body
+//       }
+//     );
+//     return response;
+//   } catch (err) {
+//     return Promise.reject(err);
+//   }
+// };
+
+export { signin, verifyToken, getProducts };

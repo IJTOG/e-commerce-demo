@@ -16,4 +16,7 @@ export class Product extends Model<Product> {
 
   @Column
   detail: string;
+
+  @Column
+  image: string;
 }

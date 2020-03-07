@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Request, UseGuards } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Post,
+  Request,
+  Body,
+  Delete,
+  Param
+} from "@nestjs/common";
 import { ProductService } from "./product.service";
 import { AuthGuard } from "@nestjs/passport";
 
@@ -6,23 +14,18 @@ import { AuthGuard } from "@nestjs/passport";
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Get("product")
+  @Get("products")
   async findProducts(@Request() req) {
-    // const _user = await this.usersRepository.create<User>({
-    //   username: "test@ee.com",
-    //   password: "123"
-    // });
-    return true;
+    return this.productService.getProducts();
   }
 
-  // @UseGuards(AuthGuard("local"))
-  // @Post("user/login")
-  // async login(@Request() req): Promise<any> {
-  //   const token = await this.userService.generateJWT(req.user);
-  //   const _user = {
-  //     username: req.user.username,
-  //     token: token
-  //   };
-  //   return _user;
-  // }
+  @Post("product/create")
+  async createProduct(@Body() product) {
+    return this.productService.createProduct(product);
+  }
+
+  @Delete("product/delete/:id")
+  async deleteProduct(@Param() params) {
+    return this.productService.deleteProduct(params.id);
+  }
 }
