@@ -20,18 +20,17 @@ const Products = ({ data, visible, handleOk, handleCancel, showModal }) => (
     </Row>
     <Table dataSource={data}>
       <Column title="Id" dataIndex="id" key="id" />
-      <Column title="Name" dataIndex="name" key="name" />
       <Column
-        title="Name"
-        dataIndex="name"
-        key="name"
+        title="Image"
+        dataIndex="image"
+        key="Image"
         render={(text, record) => (
           <span>
             {<img style={{ height: "40px" }} src={record.image}></img>}{" "}
-            {record.name}
           </span>
         )}
       />
+      <Column title="Name" dataIndex="name" key="name" />
       <Column title="Price" dataIndex="price" key="price" />
       <Column title="Detail" dataIndex="detail" key="detail" />
       <Column
