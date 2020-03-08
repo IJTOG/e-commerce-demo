@@ -35,6 +35,7 @@ export class FileService {
         .on("finish", async () => {
           await coolFilesBucket.makePublic();
           const _path = this.getPublicUrl(filename);
+          this.deleteFile(path);
           resolve(_path);
         })
     );

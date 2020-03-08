@@ -58,6 +58,18 @@ const getProduct = async _id => {
   }
 };
 
+const createProduct = async form => {
+  try {
+    let response = await axios.post(
+      `http://localhost:3001/api/products/create`,
+      form
+    );
+    return response.data;
+  } catch (err) {
+    return Promise.reject(err);
+  }
+};
+
 const updateProduct = async form => {
   try {
     let response = await axios.patch(
@@ -92,20 +104,6 @@ const uploadImage = async image => {
   }
 };
 
-// const getChangeticketByReleaseCycle = async Body => {
-//   try {
-//     let response = await axios.post(
-//       `${constants.API}/snow/changeticket/releasecycle`,
-//       {
-//         ...Body
-//       }
-//     );
-//     return response;
-//   } catch (err) {
-//     return Promise.reject(err);
-//   }
-// };
-
 export {
   signin,
   verifyToken,
@@ -113,5 +111,6 @@ export {
   getProduct,
   deleteProduct,
   uploadImage,
-  updateProduct
+  updateProduct,
+  createProduct
 };

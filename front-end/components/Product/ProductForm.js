@@ -3,18 +3,20 @@ import { lifecycle, withHandlers, withState, withProps } from "recompose";
 import { withRouter } from "next/router";
 import { compose } from "redux";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { uploadImage, updateProduct } from "../../lib/api";
+import { uploadImage, updateProduct, createProduct } from "../../lib/api";
 const { TextArea } = Input;
 
 const ProductForm = ({
-  Product,
   beforeUpload,
   handleChange,
   imageUrl,
   loading,
   form,
   onSubmit,
-  handleTextChange
+  handleTextChange,
+  nameHelptext,
+  priceHelptext,
+  detailHelptext
 }) => {
   const formItemLayout = {
     labelCol: {
@@ -32,13 +34,8 @@ const ProductForm = ({
         <Form {...formItemLayout}>
           <Form.Item
             label={<span>Product name </span>}
-            rules={[
-              {
-                required: true,
-                message: "Please input product name.",
-                whitespace: true
-              }
-            ]}
+            validateStatus={nameHelptext.type}
+            help={nameHelptext.text}
           >
             <Input
               onChange={e => handleTextChange(e, "name")}
@@ -48,13 +45,8 @@ const ProductForm = ({
           </Form.Item>
           <Form.Item
             label={<span>Product price </span>}
-            rules={[
-              {
-                required: true,
-                message: "Please input product price.",
-                whitespace: false
-              }
-            ]}
+            validateStatus={priceHelptext.type}
+            help={priceHelptext.text}
           >
             <Input
               onChange={e => handleTextChange(e, "price")}
@@ -64,13 +56,8 @@ const ProductForm = ({
           </Form.Item>
           <Form.Item
             label={<span>Detail </span>}
-            rules={[
-              {
-                required: true,
-                message: "Please input detail.",
-                whitespace: true
-              }
-            ]}
+            validateStatus={detailHelptext.type}
+            help={detailHelptext.text}
           >
             <TextArea
               onChange={e => handleTextChange(e, "detail")}
@@ -113,21 +100,58 @@ export default compose(
   withState("imageUrl", "setImageUrl", null),
   withState("loading", "setLoading", false),
   withState("editMode", "setEditmode", false),
+  withState("nameHelptext", "setNameHelptext", { type: null, text: null }),
+  withState("priceHelptext", "setPriceHelptext", { type: null, text: null }),
+  withState("detailHelptext", "setDetailHelptext", { type: null, text: null }),
   withProps(props => {
     return props;
   }),
   withRouter,
   withHandlers({
+    validateForm: ({
+      form,
+      setNameHelptext,
+      setPriceHelptext,
+      setDetailHelptext
+    }) => async () => {
+      let notError = true;
+      if (form.name === "") {
+        setNameHelptext({ type: "error", text: "Please input product name!" });
+        notError = false;
+      } else setNameHelptext({ type: null, text: null });
+      if (form.price === 0) {
+        setPriceHelptext({
+          type: "error",
+          text: "Please input product price!"
+        });
+        notError = false;
+      } else setPriceHelptext({ type: null, text: null });
+      if (form.detail === "") {
+        setDetailHelptext({
+          type: "error",
+          text: "Please input product detail!"
+        });
+        notError = false;
+      } else setDetailHelptext({ type: null, text: null });
+      return notError;
+    }
+  }),
+  withHandlers({
     uploadImage,
     updateProduct,
-    onSubmit: ({ form, imageUrl }) => async () => {
+    createProduct,
+    onSubmit: ({ form, imageUrl, editMode, validateForm }) => async () => {
       const _form = form;
-      _form.image = imageUrl;
-      try {
-        await updateProduct(form);
-        window.location.href = "/Products";
-      } catch {
-        alert("error");
+      if (await validateForm()) {
+        if (imageUrl) _form.image = imageUrl;
+        else _form.image = "https://via.placeholder.com/300";
+        try {
+          if (editMode) await updateProduct(form);
+          else await createProduct(_form);
+          window.location.href = "/Products";
+        } catch {
+          alert("error");
+        }
       }
     },
     handleTextChange: ({ form, setForm }) => async ({ target }, name) => {
@@ -172,6 +196,7 @@ export default compose(
         };
         this.props.setImageUrl(data.image);
         this.props.setForm(_form);
+        this.props.setEditmode(true);
       }
     }
   })

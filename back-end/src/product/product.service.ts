@@ -49,8 +49,9 @@ export class ProductService {
 
   updateProduct = async product => {
     try {
-      console.log(product);
-      // await this.productsRepository.create<Product>(product);
+      await this.productsRepository.update(product, {
+        where: { id: product.id }
+      });
       return true;
     } catch {
       throw new HttpException("Not authorized.", HttpStatus.EXPECTATION_FAILED);

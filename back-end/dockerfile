@@ -1,0 +1,17 @@
+FROM node:10.15.0
+
+RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+
+WORKDIR /home/node/app
+COPY *.json ./
+
+USER node
+
+COPY /src /home/node/app/src
+RUN npm install
+
+ARG DATABASE_URL=local
+ENV DATABASE_URL ${DATABASE_URL}
+ARG DATABASE_PASSWORD=local
+ENV DATABASE_PASSWORD ${DATABASE_PASSWORD}
+CMD [ "npm","run", "start" ]
