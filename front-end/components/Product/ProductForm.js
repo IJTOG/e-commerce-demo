@@ -5,6 +5,7 @@ import { compose } from "redux";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { uploadImage, updateProduct, createProduct } from "../../lib/api";
 const { TextArea } = Input;
+import styled from "styled-components";
 
 const ProductForm = ({
   beforeUpload,
@@ -74,7 +75,11 @@ const ProductForm = ({
               onChange={handleChange}
             >
               {imageUrl ? (
-                <img src={imageUrl} alt="avatar" style={{ width: "100%" }} />
+                <StyledImg
+                  src={imageUrl}
+                  alt="avatar"
+                  style={{ width: "100%" }}
+                />
               ) : (
                 <div>
                   {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -93,6 +98,10 @@ const ProductForm = ({
     </Row>
   );
 };
+
+const StyledImg = styled.img`
+  width: 100%;
+`;
 
 export default compose(
   withState("form", "setForm", { name: "", price: 0, detail: "" }),

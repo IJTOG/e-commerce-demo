@@ -1,7 +1,8 @@
 import axios from "axios";
 // import { getToken } from "./auth";
 
-const url_api = process.env.url_api;
+const host = process.env.host;
+const port = process.env.port;
 // --------------------------------------- Always attached Access token(If exist) ------------------------------------------
 axios.interceptors.request.use(
   config => {
@@ -21,7 +22,7 @@ axios.interceptors.request.use(
 
 const signin = async (username, password) => {
   try {
-    let response = await axios.post(`http://localhost:3001/api/user/login`, {
+    let response = await axios.post(`http://${host}:${port}/api/user/login`, {
       username,
       password
     });
@@ -33,7 +34,7 @@ const signin = async (username, password) => {
 
 const verifyToken = async () => {
   try {
-    let response = await axios.get(`http://localhost:3001/api/user`);
+    let response = await axios.get(`http://${host}:${port}/api/user`);
     return response.data;
   } catch (err) {
     return Promise.reject(err);
@@ -42,7 +43,7 @@ const verifyToken = async () => {
 
 const getProducts = async () => {
   try {
-    let response = await axios.get(`http://localhost:3001/api/products`);
+    let response = await axios.get(`http://${host}:${port}/api/products`);
     return response.data;
   } catch (err) {
     return Promise.reject(err);
@@ -51,7 +52,9 @@ const getProducts = async () => {
 
 const getProduct = async _id => {
   try {
-    let response = await axios.get(`http://localhost:3001/api/products/` + _id);
+    let response = await axios.get(
+      `http://${host}:${port}/api/products/` + _id
+    );
     return response.data;
   } catch (err) {
     return Promise.reject(err);
@@ -61,7 +64,7 @@ const getProduct = async _id => {
 const createProduct = async form => {
   try {
     let response = await axios.post(
-      `http://localhost:3001/api/products/create`,
+      `http://${host}:${port}/api/products/create`,
       form
     );
     return response.data;
@@ -73,7 +76,7 @@ const createProduct = async form => {
 const updateProduct = async form => {
   try {
     let response = await axios.patch(
-      `http://localhost:3001/api/products/update`,
+      `http://${host}:${port}/api/products/update`,
       form
     );
     return response.data;
@@ -85,7 +88,7 @@ const updateProduct = async form => {
 const deleteProduct = async _id => {
   try {
     let response = await axios.delete(
-      `http://localhost:3001/api/products/delete/` + _id
+      `http://${host}:${port}/api/products/delete/` + _id
     );
     return response.data;
   } catch (err) {
@@ -97,7 +100,7 @@ const uploadImage = async image => {
   try {
     const form = new FormData();
     form.append("file", image);
-    let response = await axios.post(`http://localhost:3001/api/files`, form);
+    let response = await axios.post(`http://${host}:${port}/api/files`, form);
     return response.data;
   } catch (err) {
     return Promise.reject(err);

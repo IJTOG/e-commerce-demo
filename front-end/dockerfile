@@ -1,0 +1,19 @@
+FROM node:10.16.3
+
+RUN mkdir -p /usr/src/next-app
+RUN mkdir -p /usr/src/next-app/node_modules
+WORKDIR /usr/src/next-app
+
+
+COPY package.json /usr/src/next-app/
+RUN npm install
+
+COPY . /usr/src/next-app/
+RUN npm run build
+
+ARG IP=local
+ENV IP ${IP}
+ARG PORT=local
+ENV PORT ${PORT}
+
+CMD [ "npm", "run","start" ]

@@ -4,6 +4,7 @@ import { compose } from "redux";
 import { withState, withHandlers } from "recompose";
 import { connect } from "react-redux";
 import { SaveUser } from "../../redux/action";
+import styled from "styled-components";
 
 const layout = {
   labelCol: { span: 8 },
@@ -18,14 +19,8 @@ const Signin = ({ onFinish, error_text }) => {
     <Row justify="center">
       <Col lg={8} xs={18}>
         <Card title="Sign in" bordered={false} style={{ top: "5vh" }}>
-          <img
-            src={require("../../static/logo.png")}
-            style={{ width: "100%", marginTop: "20px", marginBottom: "20px" }}
-            alt="Logo"
-          />
-          <Row justify="center" style={{ color: "red", marginBottom: "10px" }}>
-            {error_text}
-          </Row>
+          <StyledImg src={require("../../static/logo.png")} alt="Logo" />
+          <StyledRow justify="center">{error_text}</StyledRow>
           <Form
             {...layout}
             name="basic"
@@ -63,6 +58,17 @@ const Signin = ({ onFinish, error_text }) => {
     </Row>
   );
 };
+
+const StyledImg = styled.img`
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;
+
+const StyledRow = styled(Row)`
+  color: red;
+  margin-bottom: 10px;
+`;
 
 export default compose(
   connect(),

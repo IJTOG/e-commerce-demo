@@ -9,6 +9,7 @@ import { compose } from "redux";
 import { lifecycle, withHandlers, withState } from "recompose";
 import { verifyToken } from "../lib/api";
 import { removeToken } from "../lib/auth";
+import styled from "styled-components";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -33,22 +34,11 @@ const Page = ({
   return (
     <Layout style={{ minHeight: "100vh" }}>
       {!isNotDashboard && loggedIn && (
-        <Sider
-          breakpoint="lg"
-          collapsedWidth="0"
-          style={{
-            backgroundColor: "white",
-            height: "100vh"
-          }}
-        >
+        <StyledSider breakpoint="lg" collapsedWidth="0">
           <div className="logo" />
           <Menu defaultSelectedKeys={[routeActive]} mode="inline">
             <a href="/">
-              <img
-                src={require("../static/logo-2.png")}
-                style={{ width: "100%", marginBottom: "2px" }}
-                alt="Logo"
-              />
+              <StyledImg src={require("../static/logo-2.png")} alt="Logo" />
             </a>
             {routes.map(route => {
               return (
@@ -62,11 +52,11 @@ const Page = ({
               );
             })}
           </Menu>
-        </Sider>
+        </StyledSider>
       )}
       <Layout style={{ height: "100vh", overflow: "auto" }}>
         {!isNotDashboard && loggedIn && (
-          <Header style={{ padding: 0, height: 58, backgroundColor: "white" }}>
+          <StyledHeader>
             <Row justify="end">
               <Col style={{ right: "22px" }}>{user.username}</Col>
               <Col>
@@ -75,14 +65,11 @@ const Page = ({
                   overlay={menu}
                   placement="bottomRight"
                 >
-                  <Avatar
-                    style={{ right: "17px", cursor: "pointer" }}
-                    icon={<UserOutlined />}
-                  />
+                  <StyledAvatar icon={<UserOutlined />} />
                 </Dropdown>
               </Col>
             </Row>
-          </Header>
+          </StyledHeader>
         )}
         <Content style={{ margin: "0 16px" }}>{children}</Content>
         <Footer style={{ textAlign: "center" }}>E-commerce 2020</Footer>
@@ -90,6 +77,27 @@ const Page = ({
     </Layout>
   );
 };
+
+const StyledSider = styled(Sider)`
+  background-color: white;
+  height: 100vh;
+`;
+
+const StyledAvatar = styled(Avatar)`
+  right: 17px;
+  cursor: pointer;
+`;
+
+const StyledHeader = styled(Header)`
+  padding: 0px;
+  height: 58px;
+  background-color: white;
+`;
+
+const StyledImg = styled.img`
+  width: 100%;
+  margin-bottom: 2px;
+`;
 
 export default compose(
   withRouter,
